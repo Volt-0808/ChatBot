@@ -4,25 +4,47 @@ const chatbox = document.querySelector(".chatbox");
 const p = document.querySelector("p");
 
 
-
-function create_message(type){
+function create_incoming_message(){
+  if (chatInput.value == ""){return 0}
   const message = document.createElement("li")
   const message_text = document.createElement("p")
-  if(type == "incoming"){
-    message.classList.add("chat-outgoing")
-    message_text.innerHTML = chatInput.value
-    chatInput.value=""
-  } if(type == "outgoing"){
-    message.classList.add("chat-incoming")
-    eel.message_py(chatbox.lastElementChild.lastElementChild.innerHTML)(function(number){message_text.innerHTML = number})
-  } if(type == "first-outgoing"){
-    message.classList.add("chat-incoming")
-    message_text.innerHTML = "Привет как я могу тебе помочь?"
-    //eel.first_message_py()(function(number){message_text.innerHTML = number})
-  }
+  message.classList.add("chat-outgoing")
+  message_text.innerHTML = chatInput.value
+  chatInput.value=""
   chatbox.appendChild(message)
   message.appendChild(message_text)
   message.classList.add("chat")
+  return 1
 }
-sendChatBtn.onclick=function(){create_message("incoming"), create_message("outgoing"), chatbox.scrollTop = chatbox.scrollHeight;}
-create_message("first-outgoing")
+
+function create_outgoing_message(){
+  eel.message_py(chatbox.lastElementChild.lastElementChild.innerHTML)(function(number){
+    if (number == ""){return 0}
+    const message = document.createElement("li")
+    const message_text = document.createElement("p")
+    message.classList.add("chat-incoming")
+    chatbox.appendChild(message)
+    message.appendChild(message_text)
+    message.classList.add("chat")
+    message_text.innerHTML = number
+  })
+}
+
+function create_first_incoming_message(){
+  eel.first_message_py()(function(number){
+    if (number == ""){return 0}
+    const message = document.createElement("li")
+    const message_text = document.createElement("p")
+    message.classList.add("chat-incoming")
+    chatbox.appendChild(message)
+    message.appendChild(message_text)
+    message.classList.add("chat")
+    message_text.innerHTML = number
+  })
+}
+
+sendChatBtn.onclick=function(){
+  create_incoming_message()?create_outgoing_message():0; chatbox.scrollTop = chatbox.scrollHeight;
+}
+
+create_first_incoming_message()

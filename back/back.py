@@ -1,7 +1,7 @@
 
 def bot_maessage(message):
     print(message)
-    return message
+    return "Привет!!!"
 
 def first_bot_maessage():
-    return "Привет как я могу тебе помочь?"
+    return ""
